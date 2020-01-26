@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react'
 
 const CerealsIndexContainer = props => {
-  const [cereals, setCereals] = useState('')
+  const [cereals, setCereals] = useState([])
 
   useEffect(() => {
-    fetch('api/v1/cereals.json')
+    fetch('/api/cereals')
       .then(response => {
         if(response.ok) {
           return response
@@ -13,7 +13,9 @@ const CerealsIndexContainer = props => {
         }
       })
       .then(validatedResponse => validatedResponse.json())
-      .then(body => setCereals(body))
+      .then(body => {
+        setCereals(body.cereals)
+      })
       .catch(error => {
         console.log(`Error fetching cereal list: ${error.message}`)
       })
@@ -21,9 +23,11 @@ const CerealsIndexContainer = props => {
 
   const cerealTiles = cereals.map(cereal => {
     return(
-      <li>
-        <span><strong>Name: </strong>{cereal.name}</span><br/>
-        <span><strong>Description: </strong>{cereal.description}</span>
+      <li key={cereal.id}>
+        <p>
+          <span><strong>Name: </strong>{cereal.name}</span><br/>
+          <span><strong>Description: </strong>{cereal.description}</span>
+        </p>
       </li>
     )
   })
